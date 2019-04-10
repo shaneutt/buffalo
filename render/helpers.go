@@ -21,4 +21,22 @@ func init() {
 		}
 		return t.HTML(), nil
 	})
+	plush.Helpers.Add("link", link)
+}
+
+func link(href string, opts tags.Options, help plush.HelperContext) (template.HTML, error) {
+	if opts == nil {
+		opts = tags.Options{}
+	}
+	opts["href"] = href
+	if help.HasBlock() {
+		delete(opts, "body")
+		h, err := help.Block()
+		if err != nil {
+			return "", err
+		}
+		opts["body"] = h
+	}
+	a := tags.New("a", opts)
+	return a.HTML(), nil
 }
